@@ -50,3 +50,22 @@ Sao chép mục dưới đây cho từng thành viên.
 ### Bằng chứng
 
 -
+
+## NguyenCongTu-2A202604008
+
+### Phần việc phụ trách
+
+- Người kiểm số suốt buổi (CP1–CP5): tính tay độc lập từ CSV, đối chiếu với `src/lab13.py`, điền và soát số trong hồ sơ.
+- Điền `report/team/bang_chi_phi.md` (A1–A4, B1–B4) và `report/team/pilot_plan.yaml`; viết E2 trong `report/team/chi_so.md`.
+
+### Đóng góp cụ thể
+
+- CP1–CP2: bảng tính tay A và B, khớp code, lệch 0% (chi phí mỗi việc thành công 4.472 đ [simulated]; xếp hạng làm lại > xem lại > lương).
+- CP4: đối chiếu D1, điền `pilot_plan.yaml` (chia theo nhân viên 20 + 20, 859/nhóm, DE 6,96, 4 luật dừng); sửa phạm vi thành cả 12 depot cho khớp mục 6 hồ sơ.
+- CP5: kiểm tra E1 (82,83% · 27,12% · 4,25%), viết 3 dòng rủi ro kinh tế E2.
+- Chạy lại `lab13.py` trên máy khác máy viết code: chạy hết, ba phép thử A1 ĐẠT.
+
+### Bằng chứng
+
+- Commit: `4093514`, `2a9817a`, `ebaddee`, `f738e32`, `29fdaaa`, `aeb0446`, `b9edf43`.
+- File: `report/team/tinh_tay_cp1.md`, `report/team/tinh_tay_cp2.md`, `report/team/2A202604008_NguyenCongTu.md`.
