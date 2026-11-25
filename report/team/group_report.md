@@ -29,7 +29,7 @@ Chương trình chạy hết, ba phép thử A1 đạt và phần E1 khớp số
 - Ba chỉ số chính, dùng và an toàn toàn mẫu lần lượt là **82,83% · 27,12% · 4,25%**. Trong phạm vi pilot, kết quả tương ứng là **92,26% · 21,09% · 3,97%**. Đây là số từ dữ liệu lab giả lập, chưa chứng minh tác động của trợ lý.
 - Thiết kế pilot có **20 nhân viên mỗi nhóm**, ít nhất **299 yêu cầu/người**, đạt khoảng **859,20 yêu cầu hiệu dụng mỗi nhóm** cho chênh 6 điểm. Nếu tác động thật chỉ 5 điểm, power còn khoảng **64%**.
 
-Nhóm đề xuất **Go**: chỉ bắt đầu khi đủ nhân viên, event và thử được cách tắt trợ lý; đo phút thật và đạt điều kiện xem lại, an toàn trước khi tăng bước. Ngày quyết định là **12/01/2027**, sau cửa sổ chờ mở lại 7 ngày. Repo chưa có kết quả hội đồng chấm Lavie; phiếu nhóm lập để chấm nhóm khác không được dùng làm điểm nhóm mình nhận.
+Nhóm đề xuất **Go có điều kiện**: chỉ bắt đầu khi đủ nhân viên, event và thử được cách tắt trợ lý; đo phút thật và đạt điều kiện xem lại, an toàn trước khi tăng bước. Ngày quyết định là **12/01/2027**, sau cửa sổ chờ mở lại 7 ngày. Repo chưa có kết quả hội đồng chấm Lavie; phiếu nhóm lập để chấm nhóm khác không được dùng làm điểm nhóm mình nhận.
 
 ## 5. Khó khăn và cách xử lý
 
