@@ -4,6 +4,8 @@
 
 Ba dòng đầu tính bằng pandas trên `src/logix_requests.csv` (đọc với `keep_default_na=False`); ba cột dùng ở đây không phải cột `_simulated`, nhưng toàn bộ dữ liệu của lab là giả lập.
 
+Bằng chứng tính toán: chạy `python lab13.py` trong `src/` sau khi kích hoạt môi trường theo `src/README.md`. Phần **E1** in tử số, mẫu số và tỉ lệ cho cả toàn mẫu lẫn phạm vi `noi_dia` + `hang_nang`, kèm kiểm tra số đối chiếu. Mẫu số của chỉ số dùng chỉ gồm `duoc_xem_lai == 1`, không phải toàn bộ yêu cầu. Phần **B1**, **B4** và **A4** cung cấp số cho ba rủi ro E2 bên dưới.
+
 | Loại | Chỉ số | Công thức | Tính thử trên 1.200 yêu cầu |
 | --- | --- | --- | --- |
 | Chính (kết quả) | % yêu cầu đóng trong 24 giờ và không mở lại trong 7 ngày | `dong_trong_24h` bằng 1 và `mo_lai_trong_7_ngay` bằng 0, chia tổng số yêu cầu | **82,83%** (994/1.200); trong phạm vi `noi_dia` + `hang_nang`: 92,26% (906/982) |

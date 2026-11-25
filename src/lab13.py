@@ -256,3 +256,27 @@ if __name__ == '__main__':
     ti_le_mo_lai_pham_vi = trong_pham_vi['mo_lai_trong_7_ngay'].mean()
     print(f'Toàn mẫu: {so_mo_lai}/{len(reqs)} = {ti_le_mo_lai:.2%}.')
     print(f'noi_dia + hang_nang: {so_mo_lai_pham_vi}/{len(trong_pham_vi)} = {ti_le_mo_lai_pham_vi:.2%}.')
+
+    # CP5 · Nhiệm vụ E1: chỉ số của đợt chạy thử, chưa đo tác động nhân quả.
+    print('\nE1 · Ba chỉ số trong đợt chạy thử (dữ liệu lab giả lập)')
+    for pham_vi, nhom, dap_an in (
+        ('Toàn mẫu', reqs, (1200, 994, 177, 48, 51)),
+        ('noi_dia + hang_nang', trong_pham_vi, (982, 906, 128, 27, 39)),
+    ):
+        so_yc = len(nhom)
+        so_dong_dung_han = ((nhom['dong_trong_24h'] == 1)
+                            & (nhom['mo_lai_trong_7_ngay'] == 0)).sum()
+        xem = nhom[nhom['duoc_xem_lai'] == 1]
+        so_bo_qua = xem['quyet_dinh_xem_lai'].isin(['sua', 'bo']).sum()
+        so_mo_lai = (nhom['mo_lai_trong_7_ngay'] == 1).sum()
+        # Số đối chiếu cho hai CSV cố định; bắt cả lỗi chọn mẫu số chỉ số dùng.
+        assert (so_yc, so_dong_dung_han, len(xem), so_bo_qua, so_mo_lai) == dap_an, pham_vi
+        print(f'\n{pham_vi}:')
+        print(f'  Chính · Đóng trong 24h, không mở lại 7 ngày: '
+              f'{so_dong_dung_han}/{so_yc} = {so_dong_dung_han / so_yc:.2%}')
+        print(f'  Dùng · Sửa hoặc bỏ gợi ý / số được xem lại: '
+              f'{so_bo_qua}/{len(xem)} = {so_bo_qua / len(xem):.2%}')
+        print(f'  An toàn · Mở lại trong 7 ngày: '
+              f'{so_mo_lai}/{so_yc} = {so_mo_lai / so_yc:.2%}')
+    print('\nKiểm tra số đối chiếu E1 cho hai phạm vi: ĐẠT')
+    print('Chưa có nhóm đối chứng; chưa thể kết luận trợ lý làm tăng chỉ số.')
