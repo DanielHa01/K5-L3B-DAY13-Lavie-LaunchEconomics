@@ -33,7 +33,7 @@
 
 pilot:
   owner: "Giám đốc vận hành LogiX-VN"
-  scope: "Chỉ noi_dia và hang_nang ở 6 depot chạy thử (chi phí mỗi việc thành công 2.696 đ = 0,22× và 8.221 đ = 0,69× so với 12.000 đ, simulated). Loại quoc_te (22.515 đ = 1,88×, thành công 27,3%) và doi_tac (10.215 đ = 0,85×, điều khoản riêng)."
+  scope: "Chỉ noi_dia và hang_nang, ở cả 12 depot, khoảng 40 nhân viên chia 20 + 20 (6 depot chạy thử chỉ có 20 staff_id, không đủ 20 cụm mỗi nhóm). Chi phí mỗi việc thành công 2.696 đ = 0,22× và 8.221 đ = 0,69× so với 12.000 đ (simulated). Loại quoc_te (22.515 đ = 1,88×, thành công 27,3%) và doi_tac (10.215 đ = 0,85×, điều khoản riêng)."
   assignment:
     unit: "staff"
     control_share: 0.5
