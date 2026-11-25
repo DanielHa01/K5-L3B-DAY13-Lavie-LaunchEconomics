@@ -122,7 +122,86 @@ if __name__ == '__main__':
         })
     print(pd.DataFrame(bang_co_dinh).to_string(index=False))
 
-    # TODO CP2 · Nhiệm vụ B: đổi từng yếu tố, ghi vào bảng độ nhạy.
+    # CP2 · Nhiệm vụ B: đổi từng yếu tố, ghi vào bảng độ nhạy.
+    print('\nB1 · Độ nhạy [simulated]')
+    kich_ban = {
+        'Giá token gấp đôi': dict(gia_vao=GIA_VAO * 2, gia_ra=GIA_RA * 2),
+        'Giá token giảm một nửa': dict(gia_vao=GIA_VAO / 2, gia_ra=GIA_RA / 2),
+        'Xem lại gấp đôi': dict(he_so_xem_lai=2),
+        'Xem lại giảm một nửa': dict(he_so_xem_lai=0.5),
+        'Làm lại gấp đôi': dict(he_so_lam_lai=2),
+        'Làm lại giảm một nửa': dict(he_so_lam_lai=0.5),
+        'Lương tăng 25%': dict(luong_phut=LUONG_PHUT * 1.25),
+        'Tối đa 2 lần chạy': dict(max_lan_chay=2),
+        'Chỉ 1 lần chạy': dict(max_lan_chay=1),
+    }
+    goc = ket_qua['cps']
+    cps_kich_ban = {ten: mo_hinh(runs, reqs, **kw)['cps'] for ten, kw in kich_ban.items()}
+    print(f'{"Kịch bản":25s} {"CPS (đ)":>8s} {"Thay đổi":>8s}')
+    print(f'{"Gốc (A2)":25s} {goc:8,.0f} {0:+7.1f}%')
+    for ten, cps in cps_kich_ban.items():
+        print(f'{ten:25s} {cps:8,.0f} {(cps / goc - 1) * 100:+7.1f}%')
+    for yeu_to in ('Giá token', 'Xem lại', 'Làm lại'):
+        assert math.isclose(cps_kich_ban[f'{yeu_to} gấp đôi'] - goc,
+                            2 * (goc - cps_kich_ban[f'{yeu_to} giảm một nửa']))
+
+    print('\nB2 · Đổi một cặp và xếp hạng [simulated]')
+    cps_cap = mo_hinh(runs, reqs, gia_vao=GIA_VAO * 2, gia_ra=GIA_RA * 2,
+                      he_so_xem_lai=2)['cps']
+    assert math.isclose(cps_cap - goc,
+                        cps_kich_ban['Giá token gấp đôi'] + cps_kich_ban['Xem lại gấp đôi'] - 2 * goc)
+    print(f'Token và xem lại gấp đôi: {cps_cap:,.0f} đ ({(cps_cap / goc - 1) * 100:+.1f}%)')
+    xep_hang = sorted((ten for ten, cps in cps_kich_ban.items() if cps > goc),
+                      key=lambda ten: cps_kich_ban[ten] - goc, reverse=True)
+    for hang, ten in enumerate(xep_hang[:3], 1):
+        print(f'{hang}. {ten}: {(cps_kich_ban[ten] / goc - 1) * 100:+.1f}%')
+
+    print('\nB3 · Giới hạn chạy lại [simulated, đồng]')
+    bang_gioi_han = []
+    for gioi_han in (1, 2, 3):
+        chi_phi = mo_hinh(runs, reqs, max_lan_chay=gioi_han)
+        khong_thanh_cong = len(reqs) - chi_phi['thanh_cong']
+        bang_gioi_han.append({
+            'gioi_han': gioi_han,
+            'tong_tro_ly': chi_phi['tong'],
+            'khong_thanh_cong': khong_thanh_cong,
+            'ca_he_thong': chi_phi['tong'] + BASELINE * khong_thanh_cong,
+            'cps': chi_phi['cps'],
+        })
+    print(pd.DataFrame(bang_gioi_han).to_string(index=False, float_format=lambda x: f'{x:,.0f}'))
+    re_nhat_he_thong = min(bang_gioi_han, key=lambda dong: dong['ca_he_thong'])
+    re_nhat_cps = min(bang_gioi_han, key=lambda dong: dong['cps'])
+    print(f"Rẻ nhất cả hệ thống: {re_nhat_he_thong['gioi_han']} lần; CPS thấp nhất: {re_nhat_cps['gioi_han']} lần.")
+
+    print('\nB4 · Xem lại 100% noi_dia + hang_nang [simulated]')
+    yc_co_run_ok = runs.loc[runs['status'] == 'ok', 'request_id']
+    reqs_xem_lai = trong_pham_vi.copy()
+    reqs_xem_lai['phut_xem_lai_simulated'] = reqs_xem_lai['request_id'].isin(yc_co_run_ok) * 5
+    so_yc_xem_lai = reqs_xem_lai['request_id'].isin(yc_co_run_ok).sum()
+    phut_lam_lai_tb = round(reqs.loc[reqs['ket_qua'] == 'lam_lai', 'phut_lam_lai_simulated'].mean(), 1)
+    print(f'{so_yc_xem_lai} yêu cầu được xem lại, 5 phút/yêu cầu; {chi_phi_pham_vi["thanh_cong"]} việc thành công.')
+    bang_xem_lai = []
+    for phut_lam_lai in (9, phut_lam_lai_tb):
+        reqs_xem_lai['phut_lam_lai_simulated'] = (reqs_xem_lai['ket_qua'] == 'lam_lai') * phut_lam_lai
+        chi_phi = mo_hinh(runs, reqs_xem_lai)
+        phut_hoa_von = (BASELINE * chi_phi['thanh_cong'] - chi_phi['token']
+                        - chi_phi['tool'] - chi_phi['lam_lai']) / (so_yc_xem_lai * LUONG_PHUT)
+        bang_xem_lai.append({
+            'phut_lam_lai/ca': phut_lam_lai,
+            'xem_lai': chi_phi['xem_lai'],
+            'lam_lai': chi_phi['lam_lai'],
+            'tong': chi_phi['tong'],
+            'cps': chi_phi['cps'],
+            'cps/12000': chi_phi['cps'] / BASELINE,
+            'phut_xem_lai_hoa_von': phut_hoa_von,
+        })
+    print(pd.DataFrame(bang_xem_lai).to_string(index=False, formatters={
+        'phut_lam_lai/ca': '{:.1f}'.format,
+        'xem_lai': '{:,.0f}'.format, 'lam_lai': '{:,.0f}'.format,
+        'tong': '{:,.0f}'.format, 'cps': '{:,.0f}'.format,
+        'cps/12000': '{:.2f}'.format, 'phut_xem_lai_hoa_von': '{:.1f}'.format,
+    }))
+
     # TODO CP4 · Nhiệm vụ D: cỡ mẫu.
     #   from statsmodels.stats.proportion import proportion_effectsize
     #   from statsmodels.stats.power import NormalIndPower
