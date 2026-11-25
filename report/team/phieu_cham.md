@@ -13,7 +13,7 @@ Nhóm số n chấm nhóm số n + 1; nhóm cuối chấm nhóm 1. Chấm theo b
 | Pilot ra được quyết định | Không đối chứng hoặc thiếu cỡ mẫu | Đủ cỡ mẫu, luật dừng chung chung | Tách được tác động, đủ mẫu, luật dừng có ngưỡng, thời hạn, người có quyền dừng | 10 | Kế hoạch chia ngẫu nhiên theo nhân viên, 20 người mỗi nhóm ở cả 12 depot, có đối chứng cùng thời gian và cách giảm chia sẻ câu trả lời. Với mức chênh 6 điểm, mỗi người cần ít nhất 299 yêu cầu, cho 859,20 yêu cầu hiệu dụng mỗi nhóm. Có luật dừng an toàn trong 3 ngày liên tiếp, chi phí trong 2 tuần liên tiếp và vai trò xử lý cụ thể. Ngày quyết định là 12/01/2027, sau cửa sổ chờ mở lại 7 ngày. |
 | **Tổng tự chấm** | | | | **30 / 30** | Theo ba tiêu chí của phiếu chấm đối với hồ sơ kế hoạch; chưa xác nhận hiệu quả của pilot thực tế. |
 
-**Đề xuất sau khi tự chấm:** Go.
+**Đề xuất sau khi chấm:** Go.
 
 **Lý do:** Qua các số đã tính, tôi thấy nhóm có cơ sở để thử trong phạm vi noi_dia và hang_nang, nhưng vẫn cần kiểm tra lại bằng dữ liệu đo thật. Trước khi bắt đầu phải có đủ 40 nhân viên, đủ 10 event có `trace_id` và thử được cách tắt trợ lý trong 30 phút. Cuối bước 0.25, thời gian xem lại trung bình phải không quá 5 phút và tỉ lệ cần xem lại không quá 50%, đồng thời đạt điều kiện an toàn thì mới sang bước tiếp theo. Kết quả 82,83% của chỉ số chính hiện chỉ mô tả đợt chạy thử, chưa chứng minh trợ lý làm tăng chỉ số vì chưa có đối chứng.
 
