@@ -202,6 +202,57 @@ if __name__ == '__main__':
         'cps/12000': '{:.2f}'.format, 'phut_xem_lai_hoa_von': '{:.1f}'.format,
     }))
 
-    # TODO CP4 · Nhiệm vụ D: cỡ mẫu.
+    # CP4 · Nhiệm vụ D: cỡ mẫu.
     #   from statsmodels.stats.proportion import proportion_effectsize
     #   from statsmodels.stats.power import NormalIndPower
+    from statistics import NormalDist
+    from statsmodels.stats.proportion import proportion_effectsize
+    from statsmodels.stats.power import NormalIndPower
+
+    def co_mau(p1, p2, alpha=0.05, power=0.8):
+        za = NormalDist().inv_cdf(1 - alpha / 2)
+        zb = NormalDist().inv_cdf(power)
+        pb = (p1 + p2) / 2
+        return math.ceil((za * math.sqrt(2 * pb * (1 - pb))
+                          + zb * math.sqrt(p1 * (1 - p1) + p2 * (1 - p2))) ** 2 / (p2 - p1) ** 2)
+
+    print('\nD1 · Cỡ mẫu mỗi nhóm (baseline 0,70; alpha 0,05; power 0,80; ICC 0,02)')
+    icc = 0.02
+    n_5_diem = co_mau(0.70, 0.75)
+    print(f'a. Chia theo yêu cầu, chênh 5 điểm: {n_5_diem:,} yêu cầu/nhóm.')
+
+    de_75 = 1 + (75 - 1) * icc
+    n_theo_nhan_vien = math.ceil(n_5_diem * de_75)
+    nhan_vien_moi_nhom = math.ceil(n_theo_nhan_vien / 75)
+    print(f'b. 75 yêu cầu/người: DE = {de_75:.2f}; {n_theo_nhan_vien:,} yêu cầu/nhóm; '
+          f'{nhan_vien_moi_nhom} người/nhóm, tổng {2 * nhan_vien_moi_nhom} > 40 người hiện có.')
+
+    gioi_han_nhan_vien = 20 / icc
+    gioi_han_depot = 6 / icc
+    print(f'c. 20 nhân viên/nhóm: cỡ mẫu hiệu dụng luôn < {gioi_han_nhan_vien:,.0f} '
+          f'< {n_5_diem:,}; không đủ cho chênh 5 điểm dù tăng yêu cầu/người.')
+    print(f'd. 6 depot/nhóm: cỡ mẫu hiệu dụng luôn < {gioi_han_depot:,.0f}; '
+          'chỉ 6 cụm/nhóm, dưới 20 cụm.')
+
+    n_6_diem = co_mau(0.70, 0.76)
+    m_can = math.ceil(n_6_diem * (1 - icc) / (20 - n_6_diem * icc))
+    de_6_diem = 1 + (m_can - 1) * icc
+    n_hieu_dung_6 = 20 * m_can / de_6_diem
+    assert n_hieu_dung_6 >= n_6_diem
+    assert 20 * (m_can - 1) / (1 + (m_can - 2) * icc) < n_6_diem
+    print(f'e. Chênh 6 điểm: {n_6_diem:,} yêu cầu độc lập/nhóm; với 20 người/nhóm cần '
+          f'ít nhất {m_can} yêu cầu/người; DE = {de_6_diem:.2f}; n hiệu dụng = {n_hieu_dung_6:.2f}.')
+
+    power_5_diem = NormalIndPower().power(
+        effect_size=abs(proportion_effectsize(0.70, 0.75)),
+        nobs1=n_hieu_dung_6, alpha=0.05, ratio=1, alternative='two-sided',
+    )
+    print(f'Đánh đổi: thiết kế cho chênh 6 điểm có power {power_5_diem:.2f} nếu tác động thật chỉ là 5 điểm.')
+
+    print('\nD3 · Tỉ lệ mở lại trong 7 ngày hiện tại')
+    so_mo_lai = reqs['mo_lai_trong_7_ngay'].sum()
+    ti_le_mo_lai = reqs['mo_lai_trong_7_ngay'].mean()
+    so_mo_lai_pham_vi = trong_pham_vi['mo_lai_trong_7_ngay'].sum()
+    ti_le_mo_lai_pham_vi = trong_pham_vi['mo_lai_trong_7_ngay'].mean()
+    print(f'Toàn mẫu: {so_mo_lai}/{len(reqs)} = {ti_le_mo_lai:.2%}.')
+    print(f'noi_dia + hang_nang: {so_mo_lai_pham_vi}/{len(trong_pham_vi)} = {ti_le_mo_lai_pham_vi:.2%}.')
