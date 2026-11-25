@@ -11,10 +11,10 @@
 
 | STT | Họ tên | MSSV | Email | GitHub | Vai trò |
 | --: | ------ | ---- | ----- | ------ | ------- |
-|   1 |    Hà Phan Đại Dương    |   2A202604119   |   26ai.duonghpd@vinuni.edu.vn    |    DanielHa01    |    Trưởng nhóm, Người viết code    |
-|   2 |        |      |       |        |         |
-|   3 |        |      |       |        |         |
-|   4 |        |      |       |        |         |
+|   1 |    Hà Phan Đại Dương    |   2A202604119   |       |    DanielHa01    |    Trưởng nhóm, Người viết code    |
+|   2 |    Nguyễn Công Tú    |   2A202604008   |       |    nguyencongtu4800    |    Người kiểm số     |
+|   3 |    Hoàng Xuân Lĩnh    |   2A202604017    |       |    hxlinh    |     Người gắn nhãn 1    |
+|   4 |    Nguyễn Quang Thành    |   2A202604085   |       |    quangthanhttbn1-bot    |    Người gắn nhãn 2     |
 
 Bốn vai của lab:
 
