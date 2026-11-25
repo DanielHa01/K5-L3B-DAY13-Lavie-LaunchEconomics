@@ -3,49 +3,60 @@
 # Kiểm tra đọc được: python -c "import yaml; yaml.safe_load(open('../report/team/pilot_plan.yaml'))"
 #
 # D1 · Cỡ mẫu (baseline 0,70; mục tiêu +5 điểm; alpha 0,05; power 0,8; ICC 0,02)
-#   a) Chia theo yêu cầu:
-#   b) Theo nhân viên, m = 75:
-#   c) 20 nhân viên mỗi nhóm:
-#   d) 6 depot mỗi nhóm:
-#   e) Mức chênh 6 điểm (859 mỗi nhóm), 20 nhân viên mỗi nhóm:
+#   a) Chia theo yêu cầu: 1.251 yêu cầu mỗi nhóm (0,70 → 0,75).
+#   b) Theo nhân viên, m = 75: DE = 1 + 74 × 0,02 = 2,48 → 3.103 yêu cầu mỗi nhóm = 42 người mỗi nhóm, tổng 84 > 40 người hiện có: không đủ người.
+#   c) 20 nhân viên mỗi nhóm: cỡ mẫu hiệu dụng tối đa 20 / 0,02 = 1.000 < 1.251 dù tăng yêu cầu mỗi người: không đạt cho 5 điểm.
+#   d) 6 depot mỗi nhóm: tối đa 6 / 0,02 = 300, và chỉ 6 cụm mỗi nhóm (dưới 20): loại.
+#   e) Mức chênh 6 điểm (859 mỗi nhóm), 20 nhân viên mỗi nhóm: 20m / (1 + (m − 1) × 0,02) ≥ 859 → m ≥ 299 yêu cầu mỗi người, DE = 6,96.
 #
 # D2 · Năm câu kiểm tra "tách được tác động" với cách chia đã chọn (mỗi câu một dòng):
-#   1. Đối chứng chạy cùng thời gian:
-#   2. Chia ngẫu nhiên hay do người chọn:
-#   3. Ảnh hưởng gián tiếp và cách giảm:
-#   4. Chỉ số chính, ngưỡng, ngày quyết định đã viết trước:
-#   5. Ít nhất 20 cụm mỗi nhóm:
+#   1. Đối chứng chạy cùng thời gian: Có, 20 nhân viên đối chứng làm cùng tuần, cùng depot với 20 nhân viên dùng trợ lý.
+#   2. Chia ngẫu nhiên hay do người chọn: Ngẫu nhiên, bốc thăm bằng code với seed ghi trước, phân tầng theo depot.
+#   3. Ảnh hưởng gián tiếp và cách giảm: Có rủi ro nhân viên chia sẻ câu trả lời trong cùng depot; giảm bằng cấp quyền trợ lý theo tài khoản và log lượt mở theo staff_id.
+#   4. Chỉ số chính, ngưỡng, ngày quyết định đã viết trước: Có, chốt trong file này trước ngày bắt đầu, không sửa sau khi xem số.
+#   5. Ít nhất 20 cụm mỗi nhóm: Có, đúng 20 nhân viên (cụm) mỗi nhóm.
 #
 # Đánh đổi đã chấp nhận (nếu cách chia chưa đạt cả hai điều kiện):
+#   Chia theo nhân viên 20 + 20 để tách được tác động, nhưng chỉ đủ mẫu cho mức chênh 6 điểm (cần ≥ 299 yêu cầu mỗi người).
+#   Nếu tác động thật chỉ 5 điểm thì power còn 0,64: có khoảng 36% khả năng bỏ sót tác động. Ghi rõ trong hồ sơ.
+#   Không chọn chia theo yêu cầu (đủ 1.251 nhưng cùng một nhân viên vừa dùng vừa không dùng, tràn tác động cao).
 #
 # Tỉ lệ mo_lai_trong_7_ngay hiện tại và ngưỡng an toàn đã chọn:
+#   Toàn mẫu 4,25% (51/1.200); trong phạm vi noi_dia + hang_nang 3,97% (39/982).
+#   Ngưỡng tuyệt đối 3% sẽ dừng pilot ngay tuần đầu, nên dùng: nhóm trợ lý cao hơn đối chứng ≥ 2 điểm, hoặc vượt trần tuyệt đối 6%.
 
 pilot:
-  owner: "?"                      # một người có tên vai trò, không ghi "cả đội"
-  scope: "?"                      # loại yêu cầu nào, depot nào; dựa vào kết quả A3
+  owner: "Giám đốc vận hành LogiX-VN"
+  scope: "Chỉ noi_dia và hang_nang ở 6 depot chạy thử (chi phí mỗi việc thành công 2.696 đ = 0,22× và 8.221 đ = 0,69× so với 12.000 đ, simulated). Loại quoc_te (22.515 đ = 1,88×, thành công 27,3%) và doi_tac (10.215 đ = 0,85×, điều khoản riêng)."
   assignment:
-    unit: "?"                     # request | staff | depot
+    unit: "staff"
     control_share: 0.5
     randomized: true
-  rollout: [0.10, 0.25, 0.50]     # mỗi bước một tuần
+  rollout: [0.10, 0.25, 0.50]     # mỗi bước một tuần; 4 → 10 → 20 nhân viên dùng trợ lý; chỉ đo chỉ số chính từ bước 0.50
   primary_metric:
     name: dong_trong_24h_khong_mo_lai_7_ngay
     baseline: 0.70
-    mde: 0.05
+    mde: 0.06                     # đánh đổi đã chấp nhận: 6 điểm thay vì 5
     alpha: 0.05
     power: 0.80
-    n_per_arm: "?"
-    design_effect: "?"            # 1 nếu chia theo yêu cầu
-    clusters_per_arm: "?"         # để trống nếu chia theo yêu cầu
+    n_per_arm: 859
+    design_effect: 6.96
+    clusters_per_arm: 20
   identifiability:
-    concurrent_control: "?"
-    spillover_risk: "?"
-    predeclared: "?"
+    concurrent_control: "Có: 20 nhân viên đối chứng làm cùng tuần, cùng depot, phân tầng theo depot"
+    spillover_risk: "Trung bình: nhân viên cùng depot có thể chia sẻ câu trả lời; giảm bằng quyền truy cập theo tài khoản và log lượt mở trợ lý theo staff_id"
+    predeclared: "Có: chỉ số chính, mde 0,06, ba luật dừng và ngày quyết định chốt trong file này trước ngày bắt đầu"
   stop_rules:
-    - "NẾU ? TRONG ? THÌ ? KHÔNG THÌ ?"
-    - "NẾU ? TRONG ? THÌ ? KHÔNG THÌ ?"
-    - "NẾU ? TRONG ? THÌ ? KHÔNG THÌ ?"
+    - "NẾU tỉ lệ mở lại 7 ngày của nhóm trợ lý cao hơn đối chứng ≥ 2 điểm hoặc vượt 6%, hoặc có ≥ 1 ca hoàn tiền trùng TRONG 3 ngày liên tiếp THÌ Giám đốc vận hành tắt trợ lý trong 30 phút và chuyển toàn bộ về nhân viên tự làm KHÔNG THÌ không được sang bước rollout tiếp theo"
+    - "NẾU chi phí mỗi việc thành công > 8.000 đ (tính từ event agent_run_completed, staff_review_decision, staff_rework_completed) TRONG 2 tuần liên tiếp THÌ PM trợ lý hoàn phí thu hẹp về noi_dia và giới hạn 2 lần chạy KHÔNG THÌ không được mở thêm hang_nang hay depot mới"
+    - "NẾU tỉ lệ bỏ qua gợi ý (sua + bo trên số được xem lại) > 40% TRONG 1 tuần THÌ Trưởng nhóm CSKH phỏng vấn 5 nhân viên trong 3 ngày và gửi báo cáo cho PM trợ lý hoàn phí KHÔNG THÌ không được chuyển bước rollout"
   interim_looks: "chỉ kiểm tra chỉ số an toàn"
-  rollback: "?"                   # ai bấm, mất bao lâu, khách được phục vụ bằng gì
-  decision_date: "?"
-  simulated_inputs: ["?"]         # liệt kê mọi con số giả lập đã dùng
+  rollback: "Giám đốc vận hành bấm cờ tắt trợ lý, hiệu lực trong 30 phút; yêu cầu đang xử lý chuyển sang luồng nhân viên tự làm như trước pilot, khách không phải gửi lại"
+  decision_date: "2026-11-25"
+  simulated_inputs:
+    - "Chi phí mỗi việc thành công 4.472 đ (toàn mẫu), 3.414 đ và 4.599 đ có cố định (phạm vi): từ phut_xem_lai_simulated, phut_lam_lai_simulated"
+    - "Chi phí theo loại A3: noi_dia 2.696 đ, hang_nang 8.221 đ, quoc_te 22.515 đ, doi_tac 10.215 đ"
+    - "Ngưỡng chi phí 8.000 đ trong luật dừng: đặt từ hang_nang 8.221 đ (simulated)"
+    - "Độ nhạy B1: làm lại gấp đôi +51,8%, xem lại gấp đôi +40,7%"
+    - "Xem lại 100%: 11.743 đ = 0,98× (9 phút làm lại), 12.415 đ = 1,03× (15,3 phút)"
+    - "Toàn bộ dữ liệu 1.200 yêu cầu và 1.624 lần chạy là giả lập, kể cả baseline mở lại 4,25% và 3,97%"
