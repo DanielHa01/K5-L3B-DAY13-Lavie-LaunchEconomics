@@ -47,5 +47,6 @@ Chỉ số chính trong đợt chạy thử là 82,83%. Không kết luận đư
 
 | Rủi ro | Tác động đã tính | Dấu hiệu theo dõi | Hành động | Người phụ trách |
 | --- | --- | --- | --- | --- |
-| ... | ... | ... | ... | ... |
-| ... | ... | ... | ... | ... |
+| Số ca làm lại tăng gấp đôi | Chi phí mỗi việc thành công +51,8%, từ 4.472 đ lên 6.787 đ [simulated]; yếu tố nhạy nhất trong B1 | Tỉ lệ `staff_rework_completed` trên số yêu cầu theo tuần > 7% (đợt chạy thử: 48/982 = 4,9% trong phạm vi) | Thu hẹp về `noi_dia`, rà 20 trace làm lại gần nhất để tìm nguyên nhân gốc | PM trợ lý hoàn phí |
+| Phải xem lại 100% kéo dài | 11.743 đ = 0,98× của 12.000 đ (9 phút làm lại); 12.415 đ = 1,03× nếu làm lại 15,3 phút như dữ liệu [simulated]; hoà vốn khi mỗi lần xem lại ≤ 5,1 phút | % yêu cầu có `staff_review_decision` còn > 50% ở cuối bước 0.25, hoặc `phut_xem_lai` trung bình > 5 phút | Giảm tỉ lệ xem lại theo bậc khi tỉ lệ sua + bo < 15% trong 2 tuần | Trưởng nhóm CSKH |
+| Khối lượng thấp hơn dự kiến | Chi phí cố định 40 triệu đ/tháng: +1.185 đ/việc ở 45.000 yêu cầu/tháng (4.599 đ = 0,38×); +2.370 đ/việc nếu khối lượng giảm một nửa (5.784 đ = 0,48×) [simulated] | Số việc thành công theo tuần (`ticket_closed` không có `ticket_reopened`) < 50% kế hoạch | Không mở rộng pilot; xem lại hợp đồng chi phí cố định với nhà cung cấp | PM trợ lý hoàn phí |

@@ -24,6 +24,12 @@
 # Tỉ lệ mo_lai_trong_7_ngay hiện tại và ngưỡng an toàn đã chọn:
 #   Toàn mẫu 4,25% (51/1.200); trong phạm vi noi_dia + hang_nang 3,97% (39/982).
 #   Ngưỡng tuyệt đối 3% sẽ dừng pilot ngay tuần đầu, nên dùng: nhóm trợ lý cao hơn đối chứng ≥ 2 điểm, hoặc vượt trần tuyệt đối 6%.
+#   Luật theo tỉ lệ chỉ áp dụng khi mỗi nhóm có ≥ 200 yêu cầu, để bước 10% (4 người) không dừng oan. Hoàn tiền trùng thì dừng ngay, không chờ.
+#
+# Lịch và số tuần đo:
+#   1.500 yêu cầu/ngày ÷ 40 nhân viên × 82% trong phạm vi (982/1.200) ≈ 30,7 yêu cầu/người/ngày → 299 yêu cầu/người cần khoảng 10 ngày làm việc (2 tuần).
+#   Bắt đầu 2026-11-30 (thứ Hai). Tuần 1: bước 0.10 · tuần 2: bước 0.25 · tuần 3–5 (2026-12-14 → 2027-01-03): bước 0.50, đo chỉ số chính 3 tuần (dư 1 tuần cho nghỉ lễ cuối năm).
+#   Quyết định 2027-01-05, sau khi đủ ≥ 299 yêu cầu/người ở bước 0.50.
 
 pilot:
   owner: "Giám đốc vận hành LogiX-VN"
@@ -47,11 +53,14 @@ pilot:
     spillover_risk: "Trung bình: nhân viên cùng depot có thể chia sẻ câu trả lời; giảm bằng quyền truy cập theo tài khoản và log lượt mở trợ lý theo staff_id"
     predeclared: "Có: chỉ số chính, mde 0,06, ba luật dừng và ngày quyết định chốt trong file này trước ngày bắt đầu"
   stop_rules:
-    - "NẾU tỉ lệ mở lại 7 ngày của nhóm trợ lý cao hơn đối chứng ≥ 2 điểm hoặc vượt 6%, hoặc có ≥ 1 ca hoàn tiền trùng TRONG 3 ngày liên tiếp THÌ Giám đốc vận hành tắt trợ lý trong 30 phút và chuyển toàn bộ về nhân viên tự làm KHÔNG THÌ không được sang bước rollout tiếp theo"
-    - "NẾU chi phí mỗi việc thành công > 8.000 đ (tính từ event agent_run_completed, staff_review_decision, staff_rework_completed) TRONG 2 tuần liên tiếp THÌ PM trợ lý hoàn phí thu hẹp về noi_dia và giới hạn 2 lần chạy KHÔNG THÌ không được mở thêm hang_nang hay depot mới"
-    - "NẾU tỉ lệ bỏ qua gợi ý (sua + bo trên số được xem lại) > 40% TRONG 1 tuần THÌ Trưởng nhóm CSKH phỏng vấn 5 nhân viên trong 3 ngày và gửi báo cáo cho PM trợ lý hoàn phí KHÔNG THÌ không được chuyển bước rollout"
+    - "NẾU có ≥ 1 ca hoàn tiền trùng (cùng request_id ghi 2 lần trong refund_ledger_write) TRONG bất kỳ thời điểm nào, dừng ngay THÌ Giám đốc vận hành tắt trợ lý trong 30 phút, Kế toán trưởng thu hồi khoản trùng KHÔNG THÌ không được bật lại trợ lý khi chưa tìm ra nguyên nhân"
+    - "NẾU tỉ lệ mở lại 7 ngày của nhóm trợ lý cao hơn đối chứng ≥ 2 điểm hoặc vượt 6%, tính trên ≥ 200 yêu cầu mỗi nhóm, TRONG 3 ngày liên tiếp THÌ Giám đốc vận hành tắt trợ lý trong 30 phút và chuyển toàn bộ về nhân viên tự làm KHÔNG THÌ không được sang bước rollout tiếp theo"
+    - "NẾU chi phí mỗi việc thành công > 8.000 đ (tính từ event agent_run_completed, staff_review_decision, staff_rework_completed, trên ≥ 200 yêu cầu mỗi nhóm) TRONG 2 tuần liên tiếp THÌ PM trợ lý hoàn phí thu hẹp về noi_dia và giới hạn 2 lần chạy KHÔNG THÌ không được mở thêm hang_nang hay depot mới"
+    - "NẾU tỉ lệ bỏ qua gợi ý (sua + bo trên số được xem lại) > 40%, tính trên ≥ 200 yêu cầu được xem lại, TRONG 1 tuần THÌ Trưởng nhóm CSKH phỏng vấn 5 nhân viên trong 3 ngày và gửi báo cáo cho PM trợ lý hoàn phí KHÔNG THÌ không được chuyển bước rollout"
   interim_looks: "chỉ kiểm tra chỉ số an toàn"
   rollback: "Giám đốc vận hành bấm cờ tắt trợ lý, hiệu lực trong 30 phút; yêu cầu đang xử lý chuyển sang luồng nhân viên tự làm như trước pilot, khách không phải gửi lại"
+  start_date: "2026-11-30"
+  measurement_weeks: 3            # bước 0.50, 2026-12-14 → 2027-01-03; ~30,7 yêu cầu/người/ngày, cần ≥ 299 yêu cầu/người
   decision_date: "2027-01-05"
   simulated_inputs:
     - "Chi phí mỗi việc thành công 4.472 đ (toàn mẫu), 3.414 đ và 4.599 đ có cố định (phạm vi): từ phut_xem_lai_simulated, phut_lam_lai_simulated"
