@@ -29,7 +29,7 @@
 # Lịch và số tuần đo:
 #   1.500 yêu cầu/ngày ÷ 40 nhân viên × 82% trong phạm vi (982/1.200) ≈ 30,7 yêu cầu/người/ngày → 299 yêu cầu/người cần khoảng 10 ngày làm việc (2 tuần).
 #   Bắt đầu 2026-11-30 (thứ Hai). Tuần 1: bước 0.10 · tuần 2: bước 0.25 · tuần 3–5 (2026-12-14 → 2027-01-03): bước 0.50, đo chỉ số chính 3 tuần (dư 1 tuần cho nghỉ lễ cuối năm).
-#   Quyết định 2027-01-05, sau khi đủ ≥ 299 yêu cầu/người ở bước 0.50.
+#   Quyết định 2027-01-12, sau khi đủ ≥ 299 yêu cầu/người ở bước 0.50 và đủ 7 ngày chờ mở lại của yêu cầu cuối (đến 2027-01-10).
 
 pilot:
   owner: "Giám đốc vận hành LogiX-VN"
@@ -61,7 +61,7 @@ pilot:
   rollback: "Giám đốc vận hành bấm cờ tắt trợ lý, hiệu lực trong 30 phút; yêu cầu đang xử lý chuyển sang luồng nhân viên tự làm như trước pilot, khách không phải gửi lại"
   start_date: "2026-11-30"
   measurement_weeks: 3            # bước 0.50, 2026-12-14 → 2027-01-03; ~30,7 yêu cầu/người/ngày, cần ≥ 299 yêu cầu/người
-  decision_date: "2027-01-05"
+  decision_date: "2027-01-12"
   simulated_inputs:
     - "Chi phí mỗi việc thành công 4.472 đ (toàn mẫu), 3.414 đ và 4.599 đ có cố định (phạm vi): từ phut_xem_lai_simulated, phut_lam_lai_simulated"
     - "Chi phí theo loại A3: noi_dia 2.696 đ, hang_nang 8.221 đ, quoc_te 22.515 đ, doi_tac 10.215 đ"
